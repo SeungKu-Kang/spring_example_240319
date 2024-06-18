@@ -35,4 +35,10 @@ public class ReviewBO {
 	public int updateReviewById(int id, String review) {
 		return reviewMapper.updateReviewById(id, review);
 	}
+	
+	// input : id
+	// output : int(삭제에 성공한 행 개수) or void(X) 
+	public void deleteReviewById(int id) {
+		reviewMapper.deleteReviewById(id); 
+	}
 }
