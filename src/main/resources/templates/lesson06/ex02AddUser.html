@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
@@ -18,8 +17,10 @@
 <body>
 	<div class="container">
 		<h1>회원가입</h1>
+
 		<div class="form-group">
 			<label for="name">이름</label> 
+			
 			<div class="d-flex">
 				<input type="text" id="name" name="name" class="form-control col-4">
 				<button type="button" id="nameCheckBtn" class="btn btn-warning">중복확인</button>
@@ -33,16 +34,51 @@
 	
 	<script>
 		$(document).ready(function() {
-			// 중복 확인 버튼 클릭
+			// 중복확인 버튼 클릭
+			
 			$("#nameCheckBtn").on('click', function() {
-				// alert("중복확인");
+				//alert("중복확인");
 				// nameStatusArea 초기화
-				$("#nameStatusArea").empty();
+				$("#nameStatusArea").empty(); // 자식 태그 모두 비움
 				
 				let name = $("#name").val().trim();
 				if (!name) {
 					$("#nameStatusArea").append('<span class="text-danger">이름이 비어있습니다.</span>');
 					return;
+				}
+				
+				// AJAX 중복 확인(DB)
+				$.ajax({
+					// request
+					type:"GET"  // GET이면 생략 가능
+					, url:"/lesson06/ex02/is-duplication-name"
+					, data:{"name":name}
+					
+					// response
+					, success:function(data) {
+						// {"code":200, "is_duplication":true} => 중복
+						if (data.is_duplication) {
+							$("#nameStatusArea").append('<span class="text-danger">중복된 이름입니다.</span>');
+						}
+					}
+					, error:function(error) {
+						alert("이름 중복확인에 실패했습니다.");
+					}
+				});
+			});
+			
+			// 회원가입
+			$("#joinBtn").on('click', function() {
+				//alert("회원가입");
+				
+				let children = $("#nameStatusArea").children();
+				console.log(children);
+				
+				// nameStatusArea에 자식 태그가 아무것도 없으면 가입 진행
+				if (children.length < 1) {
+					alert("가입 진행");
+				} else {
+					alert("불가");
 				}
 			});
 		});
